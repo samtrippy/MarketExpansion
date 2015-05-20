@@ -25,25 +25,31 @@ def printCategories():
 
 #printCategories()
 
-def getDistance(lat, lon):
+def getClosest(lat, lon):
     """gets euclidean difference between an input's lat & lon and
-    the first business JSON object"""
+    all businesses. returns list of distances and list of businesses
+    as dictionaries"""
     with open("yelp_academic_dataset_business.json") as json_data:
         shortestDistance = [float("inf")] * 10
+        closestBusinesses = [None] * 10
         for line in json_data:          #for each business
             data = json.loads(line)     #make it into a dictionary
-            latitude = float(data['latitude'])
-            longitude = float(data['longitude'])
+            latitude = float(data['latitude'])  #get lat
+            longitude = float(data['longitude'])    #get long
             distance = math.sqrt(math.pow((latitude - lat),2) + math.pow((longitude - lon),2))
-            m = max(shortestDistance)
+            m = max(shortestDistance)   #max in list
+            i = shortestDistance.index(m)   #index of the max
             if m > distance:
-                shortestDistance.remove(m)
-                shortestDistance.append(distance)
+                shortestDistance.remove(m)  #remove the bigger distance
+                closestBusinesses.pop(i)      #remove the corresponding business
+                shortestDistance.append(distance)   #add new distance
+                closestBusinesses.append(data)  #add corresponding business
             else:
                 pass
             distance = 0
         print(shortestDistance)
-            
+        pprint (closestBusinesses)            
 
-#example case should return a difference of 100
-getDistance(133.499313000000001, -111.98375799999999)
+#example case to return the list of shortest distances
+getClosest(33.499313000000001, -111.98375799999999)
+#should return list of closest distances and list of closest business JSON objects as dictionaries
