@@ -4,31 +4,7 @@ import json, math
 import Queue
 from pprint import pprint
 
-def printOneBusiness():
-    """prints the JSON object for the first business"""
-    data = []
-    with open("yelp_academic_dataset_business.json") as json_data:
-        for line in json_data:      #each "line" in the json_data is 1 business object
-            data.append(json.loads(line))       #load the data into a python dictionary and append it
-            pprint(data)            #pretty print this first dictionary
-            break
-
-#printOne()
-
-def printCategories():
-    """prints the 'categories' attribute of the first business/JSON object"""
-    with open("yelp_academic_dataset_business.json") as json_data:
-        for line in json_data:
-            data = json.loads(line)     #load the data into a python dictionary
-            pprint(data['categories'])  #as a dictionary, you can index the value by business attributes
-            break
-
-#printCategories()
-
-def getClosest(lat, lon):
-    """gets euclidean difference between an input's lat & lon and
-    all businesses. returns list of distances and list of businesses
-    as dictionaries"""
+def NearestNeighbor(iLat, iLon, iCats):
     with open("yelp_academic_dataset_business.json") as json_data:
         shortestDistance = [float("inf")] * 10
         closestBusinesses = [None] * 10
@@ -36,7 +12,7 @@ def getClosest(lat, lon):
             data = json.loads(line)     #make it into a dictionary
             latitude = float(data['latitude'])  #get lat
             longitude = float(data['longitude'])    #get long
-            distance = math.sqrt(math.pow((latitude - lat),2) + math.pow((longitude - lon),2))
+            distance = math.sqrt(math.pow((latitude - iLat),2) + math.pow((longitude - iLon),2))
             m = max(shortestDistance)   #max in list
             i = shortestDistance.index(m)   #index of the max
             if m > distance:
@@ -47,9 +23,22 @@ def getClosest(lat, lon):
             else:
                 pass
             distance = 0
-        print(shortestDistance)
-        pprint (closestBusinesses)            
+        sharedCats = [] 
+        ret = []    #list of businesses we'll finally return
+        for item in closestBusinesses:
+            allCats = item["categories"]
+            for cat in allCats:
+                if cat in iCats and cat not in sharedCats:
+                    sharedCats.append(item)
+                else:
+                    pass
+            sim = len(sharedCats)
+            if sim >= 1:
+                final = float(1 - (sim/((len(iCats))+(len(allCats)))))
+                print(final)
+                ret.append(item)
+                sharedCats = []
+        for x in ret:
+            print(x["name"])
 
-#example case to return the list of shortest distances
-getClosest(33.499313000000001, -111.98375799999999)
-#should return list of closest distances and list of closest business JSON objects as dictionaries
+NearestNeighbor(33.499313000000001, -111.98375799999999,["Food"])
