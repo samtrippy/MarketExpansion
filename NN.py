@@ -35,7 +35,7 @@ def NearestNeighbor(iLat, iLon, iCats, kNN, prop):
                 m = max(nearest)
                 i = nearest.index(m)
                 if sim >= 1:
-                    result = 150*float(1 - (sim/float(((len(iCats))+(len(allCats))))))
+                    result = 400*float(1 - (sim/float(((len(iCats))+(len(allCats))))))
                     final = distance + result
                     if final < m:       #if it's better than any in the list
                         nearest.remove(m)
@@ -93,7 +93,7 @@ def validation(businesses, knn):
     print(avg)
         
         
-validation(g, 5)
+validation(g, 9)
 
 #test for food in AZ
 #NearestNeighbor(33.499313000000001, -111.98375799999999,["Food"], 10, 0.9)
