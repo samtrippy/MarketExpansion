@@ -47,13 +47,11 @@ def NearestNeighbor(iLat, iLon, iCats, kNN, prop):
                 sharedCats = []
                 distance = 0
                 result = 0
-#            print(nearest)  #the "distance" values incorporating shared categories
 #        pprint(closestBusinesses) #pretty prints the businesses as dictionaries
         totStars = float(0)
         for bus in closestBusinesses:
             totStars += bus["stars"]
         expectedStars = totStars/float(kNN) #calculate avg num of stars of k-Nearest Neighbors
-#        print(expectedStars)
         return expectedStars
 
 def getTestData(prop):
@@ -65,13 +63,8 @@ def getTestData(prop):
         for line in json_data:          #for each business
             counter = counter + 1
             data = json.loads(line)     #make it into a dictionary
-            #pprint(data)
-        #    print(counter)
-        #    print(start)
             if counter >= start:
-        #        print("Here")
                 businesses.append(data)
-        #        print(businesses)
 #        pprint(businesses)
         return businesses
             
